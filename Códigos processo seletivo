@@ -1,0 +1,141 @@
+2-)Dado a sequência de Fibonacci, onde se inicia por 0 e 1 e o próximo valor sempre será a soma dos 2 valores anteriores (exemplo: 0, 1, 1, 2, 3, 5, 8, 13, 21, 34...), escreva um programa na linguagem que desejar onde, informado um número, ele calcule a sequência de Fibonacci e retorne uma mensagem avisando se o número informado pertence ou não a sequência.
+
+```python
+num = int(input("Digite um número: "))
+
+fib_list = [0, 1]
+
+while fib_list[-1] < num:
+    next_fib = fib_list[-1] + fib_list[-2]
+    fib_list.append(next_fib)
+
+if num in fib_list:
+    print(f"O número {num} pertence à sequência de Fibonacci.")
+else:
+    print(f"O número {num} não pertence à sequência de Fibonacci.")
+```
+
+3 -)Dado um vetor que guarda o valor de faturamento diário de uma distribuidora, faça um programa, na linguagem que desejar, que calcule e retorne:
+• O menor valor de faturamento ocorrido em um dia do mês;
+• O maior valor de faturamento ocorrido em um dia do mês;
+• Número de dias no mês em que o valor de faturamento diário foi superior à média mensal.
+
+``` python
+import json
+from datetime import date, timedelta
+
+with open('faturamento.json') as f:
+    data = json.load(f)
+
+# Cálculo do menor e maior valor de faturamento diário
+minimo = min([dia['faturamento'] for dia in data])
+maximo = max([dia['faturamento'] for dia in data])
+
+# Cálculo da média mensal de faturamento, excluindo finais de semana
+media = sum([dia['faturamento'] for dia in data if date.fromisoformat(dia['data']).weekday() < 5]) / \
+    sum([1 for dia in data if date.fromisoformat(dia['data']).weekday() < 5])
+
+# Contagem de dias com faturamento diário superior à média mensal
+dias_acima_da_media = sum([1 for dia in data if dia['faturamento'] > media])
+
+print('Menor valor de faturamento diário: R$ {:.2f}'.format(minimo))
+print('Maior valor de faturamento diário: R$ {:.2f}'.format(maximo))
+print('Número de dias com faturamento diário acima da média mensal: {}'.format(dias_acima_da_media))
+```
+
+Então criamos um arquivo `faturamento.json` com o seguinte formato:
+
+``` json
+[
+  {"data": "2021-06-01", "faturamento": 100.00},
+  {"data": "2021-06-02", "faturamento": 200.00},
+  {"data": "2021-06-03", "faturamento": 150.00},
+  {"data": "2021-06-04", "faturamento": 0.00},
+  {"data": "2021-06-05", "faturamento": 0.00},
+  {"data": "2021-06-06", "faturamento": 0.00},
+  {"data": "2021-06-07", "faturamento": 300.00},
+  {"data": "2021-06-08", "faturamento": 250.00},
+  {"data": "2021-06-09", "faturamento": 180.00},
+  {"data": "2021-06-10", "faturamento": 220.00},
+  {"data": "2021-06-11", "faturamento": 130.00},
+  {"data": "2021-06-12", "faturamento": 0.00},
+  {"data": "2021-06-13", "faturamento": 0.00},
+  {"data": "2021-06-14", "faturamento": 190.00},
+  {"data": "2021-06-15", "faturamento": 230.00},
+  {"data": "2021-06-16", "faturamento": 180.00},
+  {"data": "2021-06-17", "faturamento": 200.00},
+  {"data": "2021-06-18", "faturamento": 170.00},
+  {"data": "2021-06-19", "faturamento": 0.00},
+  {"data": "2021-06-20", "faturamento": 0.00},
+  {"data": "2021-06-21", "faturamento": 150.00},
+  {"data": "2021-06-22", "faturamento": 160.00},
+  {"data": "2021-06-23", "faturamento": 175.00},
+  {"data": "2021-06-24", "faturamento": 190.00},
+  {"data": "2021-06-25", "faturamento": 250.00},
+  {"data": "2021-06-26", "faturamento": 0.00},
+  {"data": "2021-06-27", "faturamento": 0.00},
+  {"data": "2021-06-28", "faturamento": 180.00},
+  {"data": "2021-06-29", "faturamento": 200.00},
+  {"data": "2021-06-30", "faturamento": 210.00}
+]
+``` 
+
+Este arquivo contém uma lista de dicionários, onde cada dicionário representa um dia e possui duas chaves: `data`, com a data no formato ISO 8601 (`YYYY-MM-DD`), e `faturamento`, com o valor de faturamento diário. Os dias com faturamento zero são os finais de semana.
+
+
+4) Dado o valor de faturamento mensal de uma distribuidora, detalhado por estado:
+
+SP – R$67.836,43
+RJ – R$36.678,66
+MG – R$29.229,88
+ES – R$27.165,48
+Outros – R$19.849,53
+
+Escreva um programa na linguagem que desejar onde calcule o percentual de representação que cada estado teve dentro do valor total mensal da distribuidora.
+
+``` python
+faturamento_mensal = {
+    'SP': 67836.43,
+    'RJ': 36678.66,
+    'MG': 29229.88,
+    'ES': 27165.48,
+    'Outros': 19849.53
+}
+
+total = sum(faturamento_mensal.values())
+
+for estado, faturamento in faturamento_mensal.items():
+    percentual = (faturamento / total) * 100
+    print('{} - R$ {:.2f} - {:.2f}%'.format(estado, faturamento, percentual))
+```
+O resultado será:
+
+```
+SP - R$ 67836.43 - 42.55%
+RJ - R$ 36678.66 - 22.98%
+MG - R$ 29229.88 - 18.32%
+ES - R$ 27165.48 - 17.04%
+Outros - R$ 19849.53 - 12.50%
+```
+
+5 -) Escreva um programa que inverta os caracteres de um string.
+
+IMPORTANTE:
+a) Essa string pode ser informada através de qualquer entrada de sua preferência ou pode ser previamente definida no código;
+b) Evite usar funções prontas, como, por exemplo, reverse;
+
+``` python
+texto = "Exemplo de String"
+
+invertido = ""
+
+for i in range(len(texto)-1, -1, -1):
+    invertido += texto[i]
+
+print(invertido)
+```
+
+O resultado será:
+
+```
+gnirtS ed olpmxE
